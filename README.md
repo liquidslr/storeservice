@@ -8,6 +8,22 @@ Some featurs of the appication
 
 #### Building the application
 
+##### Quick Setup
+
+```
+docker pull liquidslr/storeservice
+docker run --rm -p 3000:3000 liquidslr/storeservice
+```
+
+##### Build using docker
+
+```
+docker build -t  storeservice .
+docker run --rm -p 3000:3000 storeservice
+```
+
+##### Locally
+
 The command below will create a binary file of the service
 
 ```
