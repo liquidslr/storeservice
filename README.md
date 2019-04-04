@@ -27,6 +27,7 @@ docker run --rm -p 3000:3000 storeservice
 The command below will create a binary file of the service
 
 ```
+dep ensure
 go build
 ```
 
