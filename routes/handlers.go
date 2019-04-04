@@ -42,5 +42,10 @@ func SetKeyValue(w http.ResponseWriter, r *http.Request) {
 
 	req := requestBody{}
 	json.Unmarshal(bodyBytes, &req)
-	DBClient.SetValue(req.Key, req.Value)
+	err = DBClient.SetValue(req.Key, req.Value)
+
+	if err == nil {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Key Value created successfully"))
+	}
 }

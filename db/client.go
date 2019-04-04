@@ -9,7 +9,7 @@ import (
 
 type DbClient interface {
 	Initialize() error
-	SetValue(key string, value string)
+	SetValue(key string, value string) error
 	GetValue(key string) ([]byte, error)
 }
 
@@ -41,12 +41,14 @@ func (bc *BoltDB) Initialize() error {
 	return nil
 }
 
-func (bc *BoltDB) SetValue(key string, value string) {
-	bc.boltDB.Update(func(tx *bolt.Tx) error {
+func (bc *BoltDB) SetValue(key string, value string) error {
+	err := bc.boltDB.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("StoreBucket"))
 		err := b.Put([]byte(key), []byte(value))
 		return err
 	})
+
+	return err
 }
 
 func (bc *BoltDB) GetValue(key string) ([]byte, error) {
