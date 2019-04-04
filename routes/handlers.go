@@ -49,3 +49,17 @@ func SetKeyValue(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Key Value created successfully"))
 	}
 }
+
+// GetAllValues http handler
+func GetAllValues(w http.ResponseWriter, r *http.Request) {
+	pairs := DBClient.GetAll()
+
+	values, err := json.Marshal(pairs)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(values)
+}

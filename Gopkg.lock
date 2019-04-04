@@ -10,6 +10,14 @@
   version = "v1.3.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:c307799fe01c92c8049378347b93b658a0f3be2d10a5dab8cc0798f45ee6759a"
+  name = "github.com/buger/goterm"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c206103e1f37c0c6c5c039706305ea2aa6e8ad3b"
+
+[[projects]]
   digest = "1:ca59b1175189b3f0e9f1793d2c350114be36eaabbe5b9f554b35edee1de50aea"
   name = "github.com/gorilla/mux"
   packages = ["."]
@@ -54,6 +62,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/boltdb/bolt",
+    "github.com/buger/goterm",
     "github.com/gorilla/mux",
     "github.com/spf13/cobra",
   ]

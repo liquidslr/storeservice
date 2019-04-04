@@ -1,12 +1,16 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"time"
 
 	"github.com/liquidslr/storeservice/db"
 	"github.com/liquidslr/storeservice/routes"
 	"github.com/spf13/cobra"
 )
+
+type callBackChan chan struct{}
 
 var cmdGet = &cobra.Command{
 	Use:   "get",
@@ -41,6 +45,30 @@ var cmdServer = &cobra.Command{
 	},
 }
 
+var cmdWatch = &cobra.Command{
+	Use:   "watch",
+	Short: "Watch for changes in key value pairs",
+	Run: func(cmd *cobra.Command, args []string) {
+		ctx := context.Background()
+		callback := make(callBackChan)
+
+		go checkEvery(ctx, 1*time.Second, callback)
+		go func() {
+			for {
+				select {
+				case <-callback:
+					Subscribe()
+				}
+			}
+		}()
+
+		for {
+			time.Sleep(1 * time.Second)
+		}
+
+	},
+}
+
 var (
 	key   string
 	value string
@@ -60,12 +88,27 @@ func init() {
 func createDB() {
 	routes.DBClient = &db.BoltDB{}
 	routes.DBClient.Initialize()
+	routes.DBClient.GetAll()
 	fmt.Println("Db instance created")
+}
+
+func checkEvery(ctx context.Context, d time.Duration, cb callBackChan) {
+	for {
+		select {
+		case <-ctx.Done():
+			// ctx is cancelled
+			return
+		case <-time.After(d):
+			if cb != nil {
+				cb <- struct{}{}
+			}
+		}
+	}
 }
 
 // Execute is used to call the args and flags
 func Execute() {
 	var rootCmd = &cobra.Command{Use: "store"}
-	rootCmd.AddCommand(cmdGet, cmdPut, cmdServer)
+	rootCmd.AddCommand(cmdGet, cmdPut, cmdServer, cmdWatch)
 	rootCmd.Execute()
 }

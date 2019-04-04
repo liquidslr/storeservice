@@ -7,10 +7,13 @@ import (
 	"github.com/boltdb/bolt"
 )
 
+type Items map[string]string
+
 type DbClient interface {
 	Initialize() error
 	SetValue(key string, value string) error
 	GetValue(key string) ([]byte, error)
+	GetAll() Items
 }
 
 type BoltDB struct {
@@ -41,6 +44,7 @@ func (bc *BoltDB) Initialize() error {
 	return nil
 }
 
+// SetValue create a key value pair
 func (bc *BoltDB) SetValue(key string, value string) error {
 	err := bc.boltDB.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("StoreBucket"))
@@ -51,6 +55,7 @@ func (bc *BoltDB) SetValue(key string, value string) error {
 	return err
 }
 
+// GetValue return the value of a specified key
 func (bc *BoltDB) GetValue(key string) ([]byte, error) {
 	var a []byte
 
@@ -66,4 +71,23 @@ func (bc *BoltDB) GetValue(key string) ([]byte, error) {
 	}
 
 	return a, err
+}
+
+// Items is all the items in the db
+
+// GetAll returns all  key value pairs in the db
+func (bc *BoltDB) GetAll() Items {
+	items := make(map[string]string)
+	bc.boltDB.View(func(tx *bolt.Tx) error {
+		// Assume bucket exists and has keys
+		b := tx.Bucket([]byte("StoreBucket"))
+
+		b.ForEach(func(k, v []byte) error {
+			items[string(k)] = string(v)
+			return nil
+		})
+		return nil
+	})
+
+	return items
 }

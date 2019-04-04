@@ -26,4 +26,11 @@ var routes = Routes{
 		"/api/set/value/",
 		SetKeyValue,
 	},
+
+	Route{
+		"GetAll",
+		"GET",
+		"/api/get/all/",
+		GetAllValues,
+	},
 }
