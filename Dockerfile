@@ -12,4 +12,5 @@ ADD . $SRC_DIR
 # Build it:
 RUN cd $SRC_DIR; go build -o myapp; cp myapp /app/;
 
+
 ENTRYPOINT ["./myapp"]

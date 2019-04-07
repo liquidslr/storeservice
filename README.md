@@ -19,7 +19,12 @@ docker run --rm -p 3000:3000 liquidslr/storeservice
 
 ```
 docker build -t  storeservice .
-docker run --rm -p 3000:3000 storeservice
+docker run --rm -p 3000:3000 storeservice start
+
+docker exec -it CONTAINERID /bin/bash
+./myapp put --key=newkey --value=newvalue
+./myapp get --key=newkey
+./myapp watch
 ```
 
 ##### Locally
